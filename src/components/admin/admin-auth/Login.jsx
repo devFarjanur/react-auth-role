@@ -8,13 +8,16 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
+    const router = useRouter();
+
     const form = useForm({
         defaultValues: {
             email: "",
@@ -49,10 +52,8 @@ const Login = () => {
             }
 
             localStorage.setItem("token", data.token);
-            console.log("Login success:", data.user);
+            router.push(data.redirect_to);
 
-            // Redirect or further actions
-            // e.g., router.push('/dashboard')
         } catch (err) {
             setError("Something went wrong");
             console.error("Login error:", err);

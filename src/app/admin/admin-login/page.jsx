@@ -1,5 +1,5 @@
 
-import Login from '@/components/admin-auth/Login';
+import Login from '@/components/admin/admin-auth/Login';
 import React from 'react';
 
 const page = () => {
