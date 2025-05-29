@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Index from "@/components/admin/admin-dashboard/Index";
 
-const DashboardPage = () => {
+const Page = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -29,4 +29,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default Page;

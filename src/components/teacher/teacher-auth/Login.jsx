@@ -14,10 +14,13 @@ import { Button } from "../../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from 'sonner'
+import { toast } from "sonner";
 
 const Login = () => {
-    const router = useRouter();
+
+    const router = useRouter()
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
 
     const form = useForm({
         defaultValues: {
@@ -26,26 +29,24 @@ const Login = () => {
         },
     });
 
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-
     const onSubmit = async (values) => {
-        setError("");
+        setError("")
         setLoading(true);
+
         try {
-            const response = await fetch(
+            const res = await fetch(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
                 {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
-                        Accept: "application/json",
+                        "content-type": "application/json",
+                        "accept": "application/json"
                     },
                     body: JSON.stringify(values),
                 }
-            );
+            )
 
-            const data = await response.json();
+            const data = await res.json();
 
             if (!res.ok) {
                 setError("Invalid credentials");
@@ -56,7 +57,6 @@ const Login = () => {
             localStorage.setItem("token", data.token);
             router.push(data.redirect_to);
             toast.success("Login in successfully")
-
         } catch (err) {
             setError("Something went wrong");
             console.error("Login error:", err);
@@ -64,14 +64,14 @@ const Login = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
             <Card className="w-full max-w-sm shadow-lg border border-gray-200">
                 <CardHeader>
                     <CardTitle className="text-center text-2xl sm:text-3xl font-bold text-gray-800">
-                        Admin Login
+                        Teacher Login
                     </CardTitle>
                 </CardHeader>
                 <CardContent>

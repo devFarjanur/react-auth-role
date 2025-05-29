@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 import React from 'react'
+import { toast } from 'sonner'
 
 const Index = () => {
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 p-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold">Dashboard Overview</h1>
                 <div className="flex gap-2">
@@ -16,11 +17,50 @@ const Index = () => {
                             Inbox
                         </Button>
                     </Link>
-
-                    <Button>
-                        Inbox
-                    </Button>
                 </div>
+            </div>
+
+            <div className="space-y-4 flex gap-2">
+                <Button onClick={() => toast.success("Success! Everything went well.")}>
+                    Success Toast
+                </Button>
+
+                <Button onClick={() => toast.error("Oops! Something went wrong.")}>
+                    Error Toast
+                </Button>
+
+                <Button onClick={() => toast.warning("Warning! Check your input.")}>
+                    Warning Toast
+                </Button>
+
+                <Button onClick={() => toast.info("FYI: Just so you know.")}>
+                    Info Toast
+                </Button>
+
+                <Button
+                    onClick={() => {
+                        const id = toast.loading("Processing...")
+                        setTimeout(() => {
+                            toast.success("Done!", { id })
+                        }, 2000)
+                    }}
+                >
+                    Loading Toast
+                </Button>
+
+                <Button
+                    onClick={() =>
+                        toast("Custom Toast", {
+                            description: "This is a fully customizable toast.",
+                            action: {
+                                label: "Undo",
+                                onClick: () => toast.info("Undo clicked"),
+                            },
+                        })
+                    }
+                >
+                    Custom Toast
+                </Button>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
