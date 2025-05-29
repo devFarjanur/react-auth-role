@@ -13,7 +13,7 @@ import { Paperclip, Send, Smile } from 'lucide-react'
 
 export default function Inbox() {
     return (
-        <div className="h-screen flex bg-background">
+        <div className="h-full flex bg-background">
             {/* Sidebar */}
             <div className="w-72 border-r bg-muted/50 p-4 flex flex-col">
                 <h2 className="text-lg font-semibold mb-4">Conversations</h2>
@@ -94,7 +94,7 @@ export default function Inbox() {
                 </ScrollArea>
 
                 {/* Fixed input area */}
-                <div className="border-t p-4 bg-background sticky bottom-0">
+                <div className="border-t p-4 bg-background bottom-0">
                     <div className="flex items-center gap-2">
                         <Button variant="ghost" size="icon" className="h-9 w-9">
                             <Paperclip className="h-4 w-4" />
