@@ -1,83 +1,107 @@
-"use client";
+"use client"
 
-import { useForm } from "react-hook-form";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "../../ui/form";
-import { Input } from "../../ui/input";
-import { Button } from "../../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { toast } from 'sonner'
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-const Login = () => {
+const Register = () => {
+
     const router = useRouter();
 
     const form = useForm({
         defaultValues: {
+            name: "",
             email: "",
             password: "",
-        },
+            password_confirmation: "",
+            role: "teacher"
+        }
     });
 
-    const [error, setError] = useState("");
+    const [error, setError] = useState();
     const [loading, setLoading] = useState(false);
 
-    const onSubmit = async (values) => {
+
+    const onRegister = async (values) => {
         setError("");
         setLoading(true);
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                },
-                body: JSON.stringify(values),
-            });
 
-            const data = await res.json();
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/register`,
+                {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json",
+                        "accept": "appliaction/json"
+                    },
+                    body: JSON.stringify(values),
+                }
+            );
 
             if (!res.ok) {
-                setError("Invalid credentials");
-                toast.error("Invalid credentials")
+                setError("Invaild data");
+                toast.error("Invaild data")
                 return;
             }
 
+            const data = await res.json();
+
             localStorage.setItem("token", data.token);
             router.push(data.redirect_to);
-            toast.success("Login in successfully")
+            toast.success("Login successfully");
 
         } catch (err) {
             setError("Something went wrong");
             console.error("Login error:", err);
             toast.error("Login error");
+
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
             <Card className="w-full max-w-sm shadow-lg border border-gray-200">
                 <CardHeader>
                     <CardTitle className="text-center text-2xl sm:text-3xl font-bold text-gray-800">
-                        Admin Login
+                        Teacher Register
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
                         <form
-                            onSubmit={form.handleSubmit(onSubmit)}
+                            onSubmit={form.handleSubmit(onRegister)}
                             className="space-y-6"
                             noValidate
                         >
+
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                rules={{ required: "Name is required" }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                name="name"
+                                                type="name"
+                                                placeholder="Enter your name"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
                             <FormField
                                 control={form.control}
                                 name="email"
@@ -87,6 +111,7 @@ const Login = () => {
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
                                             <Input
+                                                name="email"
                                                 type="email"
                                                 placeholder="Enter your email"
                                                 {...field}
@@ -106,6 +131,27 @@ const Login = () => {
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
                                             <Input
+                                                name="password"
+                                                type="password"
+                                                placeholder="Enter your password"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                rules={{ required: "Password is required" }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Confrim Password</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                name="password_confirmation"
                                                 type="password"
                                                 placeholder="Enter your password"
                                                 {...field}
@@ -125,7 +171,7 @@ const Login = () => {
                                 className="w-full text-base sm:text-lg"
                                 disabled={loading}
                             >
-                                {loading ? "Logging in..." : "Login"}
+                                {loading ? "Registring..." : "Register"}
                             </Button>
                         </form>
                     </Form>
@@ -135,4 +181,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;
