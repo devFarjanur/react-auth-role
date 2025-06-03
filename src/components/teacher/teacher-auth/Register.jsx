@@ -1,17 +1,28 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const Register = () => {
-
     const router = useRouter();
 
     const form = useForm({
@@ -20,13 +31,12 @@ const Register = () => {
             email: "",
             password: "",
             password_confirmation: "",
-            role: "teacher"
-        }
+            role: "teacher",
+        },
     });
 
-    const [error, setError] = useState();
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-
 
     const onRegister = async (values) => {
         setError("");
@@ -38,34 +48,37 @@ const Register = () => {
                 {
                     method: "POST",
                     headers: {
-                        "content-type": "application/json",
-                        "accept": "appliaction/json"
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
                     },
                     body: JSON.stringify(values),
                 }
             );
 
-            if (!res.ok) {
-                setError("Invaild data");
-                toast.error("Invaild data")
+            const data = await res.json();
+
+            if (res.status === 201) {
+                toast.success(data.message || "Registered successfully");
+                router.push(`/teacher/verify-code`);
                 return;
             }
 
-            const data = await res.json();
+            if (res.status === 422) {
+                setError(data.message || "Email already taken");
+                toast.error(data.message || "Email already taken");
+                return;
+            }
 
-            localStorage.setItem("token", data.token);
-            router.push("/teacher/teacher-register");
-            toast.success("Register successfully");
-
-        } catch (err) {
             setError("Something went wrong");
+            toast.error("Something went wrong");
+        } catch (err) {
             console.error("Register error:", err);
-            toast.error("Register error");
-
+            setError("Unexpected error");
+            toast.error("Unexpected error");
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -82,7 +95,6 @@ const Register = () => {
                             className="space-y-6"
                             noValidate
                         >
-
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -92,8 +104,7 @@ const Register = () => {
                                         <FormLabel>Name</FormLabel>
                                         <FormControl>
                                             <Input
-                                                name="name"
-                                                type="name"
+                                                type="text"
                                                 placeholder="Enter your name"
                                                 {...field}
                                             />
@@ -112,7 +123,6 @@ const Register = () => {
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
                                             <Input
-                                                name="email"
                                                 type="email"
                                                 placeholder="Enter your email"
                                                 {...field}
@@ -132,7 +142,6 @@ const Register = () => {
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
                                             <Input
-                                                name="password"
                                                 type="password"
                                                 placeholder="Enter your password"
                                                 {...field}
@@ -145,16 +154,20 @@ const Register = () => {
 
                             <FormField
                                 control={form.control}
-                                name="password"
-                                rules={{ required: "Password is required" }}
+                                name="password_confirmation"
+                                rules={{
+                                    required: "Confirm Password is required",
+                                    validate: (value) =>
+                                        value === form.getValues("password") ||
+                                        "Passwords do not match",
+                                }}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Confrim Password</FormLabel>
+                                        <FormLabel>Confirm Password</FormLabel>
                                         <FormControl>
                                             <Input
-                                                name="password_confirmation"
                                                 type="password"
-                                                placeholder="Enter your password"
+                                                placeholder="Confirm your password"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -172,16 +185,19 @@ const Register = () => {
                                 className="w-full text-base sm:text-lg"
                                 disabled={loading}
                             >
-                                {loading ? "Registring..." : "Register"}
+                                {loading ? "Registering..." : "Register"}
                             </Button>
                         </form>
                     </Form>
 
-
                     <div className="pt-5 text-center">
                         <p className="text-sm text-gray-600">
                             Already registered?{" "}
-                            <Button asChild variant="link" className="text-blue-600 hover:text-blue-800 p-0 h-auto">
+                            <Button
+                                asChild
+                                variant="link"
+                                className="text-blue-600 hover:text-blue-800 p-0 h-auto"
+                            >
                                 <Link href="/teacher/teacher-login">Login</Link>
                             </Button>
                         </p>
