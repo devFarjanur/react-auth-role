@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -53,13 +54,13 @@ const Register = () => {
             const data = await res.json();
 
             localStorage.setItem("token", data.token);
-            router.push(data.redirect_to);
-            toast.success("Login successfully");
+            router.push("/teacher/teacher-register");
+            toast.success("Register successfully");
 
         } catch (err) {
             setError("Something went wrong");
-            console.error("Login error:", err);
-            toast.error("Login error");
+            console.error("Register error:", err);
+            toast.error("Register error");
 
         } finally {
             setLoading(false);
@@ -175,6 +176,16 @@ const Register = () => {
                             </Button>
                         </form>
                     </Form>
+
+
+                    <div className="pt-5 text-center">
+                        <p className="text-sm text-gray-600">
+                            Already registered?{" "}
+                            <Button asChild variant="link" className="text-blue-600 hover:text-blue-800 p-0 h-auto">
+                                <Link href="/teacher/teacher-login">Login</Link>
+                            </Button>
+                        </p>
+                    </div>
                 </CardContent>
             </Card>
         </div>

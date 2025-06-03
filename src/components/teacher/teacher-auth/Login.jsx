@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const Login = () => {
 
@@ -132,6 +133,15 @@ const Login = () => {
                             </Button>
                         </form>
                     </Form>
+
+                    <div className="pt-5 text-center">
+                        <p className="text-sm text-gray-600">
+                            New here?{" "}
+                            <Button asChild variant="link" className="text-blue-600 hover:text-blue-800 p-0 h-auto">
+                                <Link href="/teacher/teacher-register">Create an account</Link>
+                            </Button>
+                        </p>
+                    </div>
                 </CardContent>
             </Card>
         </div>
